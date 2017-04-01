@@ -1,0 +1,128 @@
+#userDetail{
+    position: fixed;top: 44px;bottom: 0px;width: 100%;overflow: auto;
+}
+#userDetail .descPanel{
+    position: fixed;top: 44px;bottom: 89px;width: 100%;overflow: auto;
+}
+#photos {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+#photos img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
+#showName {
+    text-align: center;
+    font-size: 16px;
+    color: #222;
+}
+
+#showName .nick {
+    color: #999999;
+}
+
+.operationPanel {
+    position: fixed;
+    bottom: 0px;
+    height: 89px;
+    width: calc(100% - 64px);
+    background-color: #f8f8f8;
+    padding-left: 32px;
+    padding-right: 32px;
+    font-size: 0px;
+    z-index: 99;
+}
+
+.operationPanel .btn-group {
+    height: 89px;
+    width: 33.33%;
+    display: inline-block;
+    font-size: 16px;
+    color: rgb(255, 122, 33);
+    text-align: center;
+    margin-top: 12px;
+}
+.operationPanel .btn-group img{
+    width: 40px;
+    height: 40px;
+}
+
+.a-li-desc {
+    margin-top: 28px;
+    padding-left: 32px;
+    font-size: 15px;
+}
+
+.a-li-desc .title {
+
+}
+
+.a-li-desc .content {
+    margin-top: 12px;
+    color: rgb(255, 122, 33);
+}
+
+.a-li-desc-hr {
+    margin-top: 20px;
+    margin-left: 32px;
+    border: none;
+    border-top: 1px solid #f3f3f3;
+}
+
+.a-li-call-hr {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border: none;
+    border-top: 1px solid #f3f3f3;
+}
+
+.shade {
+    position: fixed;
+    z-index: 98;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .1);
+    font-size: 16px;
+}
+
+.shade .callPanel {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 16px);
+    padding: 8px;
+}
+
+.shade .callPanel .cancel {
+    margin-top: 4px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 16px;
+    color: rgb(255, 122, 33);
+    text-align: center;
+}
+
+.shade .callPanel .call {
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 20px 20px 20px 80px;
+}
+.shade .callPanel .call .aCallLi .content{
+    color: rgb(255, 122, 33);
+}
+.shade .callPanel .call .callTitle{
+    margin-bottom: 28px;
+    height: 20px;
+    line-height: 20px;
+    color: rgb(255, 122, 33);
+}
+.shade .callPanel .call .callTitle img{
+    position: absolute;
+    left: 32px;
+    width: 20px;
+    height: 20px;
+}

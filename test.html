@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>手机通讯录</title>
+</head>
+<body>
+<div id="aaa"></div>
+<div id="item-container">
+    <ul></ul>
+</div>
+<!--<script src="jquery-1.8.3.min.js"></script>-->
+<!--介绍说需要JQ支持，但是阅读源码后发现无JQ内容，如果出现异常可留意改备注-->
+<script src="js/jquery.charfirst.pinyin.js"></script>
+<script>
+    var list=['!!','王0','nide','及的','张大开杀戒','!'];
+    var map = {}
+    var html = list.map(function (item) {
+        var char = makePy(item)
+        var ch = char[0][0]
+        if (map[ch]) {
+            return '<li>' + item + '</li>'
+        } else {
+            map[ch] = true
+            return '<li data-ch="' + ch + '">' + item + '</li>'
+        }
+    }).join('')
+/*$('#aaa').html(html)*/
+</script>
+<script>
+    var app = app || {}
+
+    app.ItemList = function (data) {
+        var list = []
+        var map = {}
+        var html
+
+        html = data.map(function (item) {
+            var i = item.lastIndexOf(' ')
+            var en = item.slice(0, i)
+            var cn = item.slice(i + 1)
+            var ch = en[0]
+            if (map[ch]) {
+                return '<li>' + en + '<br>' + cn + '</li>'
+            } else {
+                map[ch] = true
+                return '<li data-ch="' + ch + '">' + en + '<br>' + cn + '</li>'
+            }
+        }).join('')
+
+        var elItemList = document.querySelector('#item-container ul')
+        elItemList.innerHTML = html
+
+        return {
+            gotoChar: function (ch) {
+                if (ch === '*') {
+                    elItemList.scrollTop = 0
+                } else if (ch === '#') {
+                    elItemList.scrollTop = elItemList.scrollHeight
+                } else {
+                    var target = elItemList.querySelector('[data-ch="' + ch + '"]')
+                    if (target) {
+                        target.scrollIntoView()
+                    }
+                }
+            }
+        }
+    }
+
+    app.main = function () {
+        var itemList = app.ItemList(app.data)
+        new IndexSidebar().on('charChange', itemList.gotoChar)
+    }
+
+    app.main()
+</script>
+</body>
+</html>

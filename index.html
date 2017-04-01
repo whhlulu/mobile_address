@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>手机通讯录</title>
+    <link rel="stylesheet" href="css/mptReset.css">
+    <link rel="stylesheet" href="css/indexSidebar.css">
+    <link rel="stylesheet" href="css/app.css">
+
+</head>
+<body>
+<!--标题-->
+<header class="headerIndex"
+        style="width: 100%;position: fixed;z-index: 5;top: 0px;background-color: #f8f8f8;border-bottom: 1px solid #e2e2e2;">
+                <span id="backTohome" style="position: absolute;left: 0px;line-height: 44px;padding:0px 6px 0px 18px;">
+                    <img src="img/back.png" style="vertical-align: middle;width: 8px;height: 14px;"
+                         onclick="backclose()">
+                </span>
+    <!--<span id="closeview" style="position: absolute;left: 39px;line-height: 44px;padding:0px 15px 0px 10px;">
+        <img src="img/close.png" style="vertical-align: middle;width: 14px;height: 14px;">
+    </span>-->
+    <div style="background-color: #f8f8f8;width: 100%;height: 44px;text-align: center;">
+            <span id="title"
+                  style="display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size: 17px;color: #222;height: 44px;line-height: 44px;width: 70%;margin-left: 15%;">手机通讯录</span>
+    </div>
+</header>
+<!--搜索框-->
+<div id="searchIndex" style="position: relative;height: 40px;margin-top: 44px;background-color: #c1c1c1;">
+    <input type="text" placeholder="搜索" oninput="OnInput(event)" id="searchInput"
+           style="border: none;border-radius: 5px;margin: 8px 10px;padding-left: 30px;width: calc(100% - 50px);height: 24px;font-size: 13px;">
+    <img src="img/search.png" alt="" style="height: 16px;width: 16px;position: absolute;top: 13px;left: 16px;">
+    <img id="cleanSearchImg" onclick="cleanSearch()" src="img/close.png" alt=""
+         style="height: 16px;width: 16px;position: absolute;top: 13px;right: 16px;display: none;">
+</div>
+<!--列表页-->
+<div id="item-container" class="indexAddress">
+    <ul data-ch="*"></ul>
+    <div data-ch="#"></div>
+</div>
+<!--详细页-->
+<div id="userDetail" style="display: none">
+<div class="descPanel" >
+    <div id="photos"><img id="photosImg" src="img/email0.png" alt=""></div>
+    <div id="showName">陈亮</div>
+    <div id="aLiDescHtml"></div>
+</div>
+<div id="operationPanel" class="operationPanel">
+    <div class="btn-group" onclick="clickMessage()">
+        <div class="img-div"><img class="messageImg" src="img/message0.png" alt=""></div>
+        <div class="desc-div messageDesc">消息</div>
+    </div>
+    <div class="btn-group" onclick="clickDudu()" style="display: none">
+        <div class="img-div"><img class="duduImg" src="img/dudu0.png" alt=""></div>
+        <div class="desc-div duduDesc">嘟嘟</div>
+    </div>
+    <div class="btn-group" onclick="clickMobilephone()">
+        <div class="img-div"><img class="mobilephoneImg" src="img/mobilephone0.png" alt=""></div>
+        <div class="desc-div mobilephoneDesc">手机</div>
+    </div>
+    <div class="btn-group" onclick="clickEmail()">
+        <div class="img-div"><img class="emailImg" src="img/email0.png" alt=""></div>
+        <div class="desc-div emailDesc">邮件</div>
+    </div>
+</div>
+</div>
+<!--选择呼出页-->
+<div class="shade" style="display: none">
+    <div class="callPanel">
+        <div class="call">
+            <div class="callTitle">
+                <img class="callTitleImg" src="img/mobilephone2.png" alt="">
+                <span class="callTitleDesc">呼叫</span>
+            </div>
+            <div id="callContent">
+            </div>
+        </div>
+        <div class="cancel" onclick="cancelCall()">
+            取消
+        </div>
+    </div>
+</div>
+<script src="data/addressjd.js"></script>
+<!--原生轻应用交互插件&#45;&#45;内网使用查看demo可忽略-->
+<!--<script src="http://10.10.3.114:9081/maservlet/html/yyplus/yyjzh5plus.js"></script>-->
+<script src="js/jquery.charfirst.pinyin.js"></script>
+<script src="js/IndexSidebar.js"></script>
+<script src="js/util.js"></script>
+<script>
+    var clickedUser = {};//被选择的通讯录
+    var addressData = {};//获取原生数据
+    var elItemList = document.querySelector('#item-container ul');
+    /*initplus(contactsMain);*/
+    contactsMain();
+    function contactsMain() {
+        var fields = ['displayName', 'name',];
+        /*交互插件方法可忽略 我们用json文件代替*/
+        /*navigator.contacts.find(fields, function (contacts) {
+            addressData = contacts;
+            elItemList.innerHTML = addressTransfer(addressData);
+        }, function (contactError) {
+            alert('原生交互插件异常！')
+        });*/
+        addressData = address;
+        elItemList.innerHTML = addressTransfer(addressData);
+    }
+    function gotoChar(ch) {
+        if (ch === '*') {
+            var target = document.getElementById('item-container').querySelector('[data-ch="' + ch + '"]')
+            if (target) {
+                target.scrollIntoView()
+            }
+        } else if (ch === '#') {
+            var target = document.getElementById('item-container').querySelector('[data-ch="' + ch + '"]')
+            if (target) {
+                target.scrollIntoView()
+            }
+        } else {
+            var target = elItemList.querySelector('[data-ch="' + ch + '"]')
+            if (target) {
+                target.scrollIntoView()
+            }
+        }
+    }
+    new IndexSidebar().on('charChange', gotoChar);
+    function OnInput(event) {
+        if (event.target.value === '') {
+            elItemList.innerHTML = addressTransfer(addressData);
+            document.getElementById('cleanSearchImg').style.display = 'none';
+        } else {
+            var fields = ['displayName', 'name', 'phoneNumbers', 'nick'];
+            var options = new ContactFindOptions();
+            options.filter = event.target.value;
+            options.multiple = true;
+            navigator.contacts.find(fields, function (contacts) {
+                addressData1 = contacts;
+                elItemList.innerHTML = addressTransfer(addressData1);
+            }, function (contactError) {
+                alert('原生交互插件异常！')
+            },options);
+            document.getElementById('cleanSearchImg').style.display = 'block';
+        }
+    }
+    //清空搜索框
+    function cleanSearch() {
+        document.getElementById('searchInput').value='';
+        elItemList.innerHTML = addressTransfer(addressData);
+        document.getElementById('cleanSearchImg').style.display = 'none';
+    }
+    //进入详情页面
+    function clickUser(that) {
+        for (var i = 0; i < addressData.length; i++) {
+            //注意一定使用==，而不是===！ios中不全等
+            if (addressData[i].id == that.getAttribute('data-id')) {
+                clickedUser = addressData[i]
+            }
+        }
+        goDesc(clickedUser);
+    }
+    //页面回退
+    function backclose(clickedUser) {
+        if (document.getElementById('searchIndex').style.display == 'none') {//现在在详细页面,需要返回
+            document.getElementById('userDetail').style.display = "none";
+            document.getElementById('title').innerHTML = "手机通讯录";
+            document.getElementById('searchIndex').style.display = "block";
+            document.getElementById('item-container').style.display = "block";
+            document.getElementsByClassName('index-sidebar-container')[0].style.display = "block";
+        } else {//在列表页，需要关闭
+            YYPlugin.call("CommonPlugin", "closewindow");
+        }
+    }
+    function goDesc(clickedUser) {//现在在列表页,需要进入详情
+        document.getElementById('showName').innerHTML = clickedUser.nickname ? clickedUser.chinaName + '<span class="nick">(' + clickedUser.nickname + ')</span>' : clickedUser.chinaName;
+        document.getElementById('photosImg').setAttribute('src',clickedUser.photos ? clickedUser.photos[0].value : 'img/email0.png')
+        var aLiDescHtml = '';
+        function ToALiHtmls(key, name, trans) {
+            if (key) {
+                for (var i = 0; i < key.length; i++) {
+                    aLiDescHtml = aLiDescHtml + '<div class="a-li-desc ' + name + '"><div class="title">' + trans(key[i].type) + '</div><div class="content">' + key[i].value + '</div></div>';
+                }
+                aLiDescHtml = aLiDescHtml + '<hr class="a-li-desc-hr"/>';
+            }
+        }
+
+        function ToALiHtml(key, name, trans) {
+            if (key) {
+                aLiDescHtml = aLiDescHtml + '<div class="a-li-desc"><div class="title">' + trans(name) + '</div><div class="content">' + key + '</div></div>';
+                aLiDescHtml = aLiDescHtml + '<hr class="a-li-desc-hr"/>';
+            }
+        }
+
+        ToALiHtmls(clickedUser.phoneNumbers, 'phoneNumbers', TRANPHONES)
+        ToALiHtmls(clickedUser.emails, 'emails', TRANEMAIL)
+        ToALiHtml(clickedUser.birthday, 'birthday', TRANOTHER)
+        ToALiHtml(clickedUser.urls, 'urls', TRANOTHER)
+        ToALiHtml(clickedUser.note, 'note', TRANOTHER)
+        document.getElementById('aLiDescHtml').innerHTML = aLiDescHtml;
+        if (document.getElementsByClassName('phoneNumbers').length == 0) {
+            document.getElementsByClassName('messageImg')[0].setAttribute('src', 'img/message1.png');
+            document.getElementsByClassName('duduImg')[0].setAttribute('src', 'img/dudu1.png');
+            document.getElementsByClassName('mobilephoneImg')[0].setAttribute('src', 'img/mobilephone1.png');
+            document.getElementsByClassName('messageDesc')[0].style.color = '#B8C2CC';
+            document.getElementsByClassName('duduDesc')[0].style.color = '#B8C2CC';
+            document.getElementsByClassName('mobilephoneDesc')[0].style.color = '#B8C2CC';
+        } else {
+            document.getElementsByClassName('messageImg')[0].setAttribute('src', 'img/message0.png');
+            document.getElementsByClassName('duduImg')[0].setAttribute('src', 'img/dudu0.png');
+            document.getElementsByClassName('mobilephoneImg')[0].setAttribute('src', 'img/mobilephone0.png');
+            document.getElementsByClassName('messageDesc')[0].style.color = 'rgb(255, 122, 33)';
+            document.getElementsByClassName('duduDesc')[0].style.color = 'rgb(255, 122, 33)';
+            document.getElementsByClassName('mobilephoneDesc')[0].style.color = 'rgb(255, 122, 33)';
+        }
+        if (document.getElementsByClassName('emails').length == 0) {
+            document.getElementsByClassName('emailImg')[0].setAttribute('src', 'img/email1.png');
+            document.getElementsByClassName('emailDesc')[0].style.color = '#B8C2CC';
+        } else {
+            document.getElementsByClassName('emailImg')[0].setAttribute('src', 'img/email0.png');
+            document.getElementsByClassName('emailDesc')[0].style.color = 'rgb(255, 122, 33)';
+        }
+
+        document.getElementById('searchIndex').style.display = "none";
+        document.getElementById('item-container').style.display = "none";
+        document.getElementsByClassName('index-sidebar-container')[0].style.display = "none";
+        document.getElementById('title').innerHTML = "联系人详情";
+        document.getElementById('userDetail').style.display = "block";
+    }
+
+    //拨打电话的取消按钮
+    function cancelCall() {
+        document.getElementsByClassName('shade')[0].style.display = 'none';
+    }
+
+    //发信息
+    function clickMessage() {
+        var length = document.getElementsByClassName('phoneNumbers').length;
+        if (length == 0) {
+            console.log('不能发消息')
+        } else if (length == 1) {
+            YYPlugin.call("CommonPlugin", "sms", {phone: clickedUser.phoneNumbers[0].value,message: ''});
+        } else {
+            var callContentHtml = ''
+            for (var i = 0; i < length; i++) {
+                if (i != 0) {
+                    callContentHtml = callContentHtml + '<hr class="a-li-call-hr"/>'
+                }
+                callContentHtml = callContentHtml + ' <div class="aCallLi" onclick="messageing(this)" data-message="' + clickedUser.phoneNumbers[i].value + '"><div class="title">' + TRANPHONES(clickedUser.phoneNumbers[i].type) + '</div><div class="content">' + clickedUser.phoneNumbers[i].value + '</div></div>';
+            }
+            document.getElementById('callContent').innerHTML = callContentHtml;
+            document.getElementsByClassName('callTitleImg')[0].setAttribute('src', 'img/message2.png');
+            document.getElementsByClassName('callTitleDesc')[0].innerHTML = '短信';
+            document.getElementsByClassName('shade')[0].style.display = 'block';
+        }
+    }
+
+    function messageing(that) {
+        var sub = that.getAttribute('data-message')
+        YYPlugin.call("CommonPlugin", "sms", {phone: sub,message: ''});
+    }
+
+    //拨打嘟嘟
+    function clickDudu() {
+        var length = document.getElementsByClassName('phoneNumbers').length;
+        if (length == 0) {
+            console.log(0)
+        } else if (length == 1) {
+            console.log(1)
+        } else {
+            var callContentHtml = ''
+            for (var i = 0; i < length; i++) {
+                if (i != 0) {
+                    callContentHtml = callContentHtml + '<hr class="a-li-call-hr"/>'
+                }
+                callContentHtml = callContentHtml + ' <div class="aCallLi" onclick="duduing(this)" data-dudu="' + clickedUser.phoneNumbers[i].value + '"><div class="title">' + TRANPHONES(clickedUser.phoneNumbers[i].type) + '</div><div class="content">' + clickedUser.phoneNumbers[i].value + '</div></div>';
+            }
+            document.getElementById('callContent').innerHTML = callContentHtml;
+            document.getElementsByClassName('callTitleImg')[0].setAttribute('src', 'img/dudu2.png');
+            document.getElementsByClassName('callTitleDesc')[0].innerHTML = '嘟嘟';
+            document.getElementsByClassName('shade')[0].style.display = 'block';
+        }
+    }
+
+    function duduing(that) {
+        var sub = that.getAttribute('data-dudu')
+        alert(sub)
+    }
+
+    //拨打电话
+    function clickMobilephone() {
+        var length = document.getElementsByClassName('phoneNumbers').length;
+        if (length == 0) {
+            console.log('不能拨打电话')
+        } else if (length == 1) {
+            YYPlugin.call("CommonPlugin", "call", {phone: clickedUser.phoneNumbers[0].value});
+        } else {
+            var callContentHtml = '';
+            for (var i = 0; i < length; i++) {
+                if (i != 0) {
+                    callContentHtml = callContentHtml + '<hr class="a-li-call-hr"/>'
+                }
+                callContentHtml = callContentHtml + ' <div class="aCallLi" onclick="calling(this)" data-call="' + clickedUser.phoneNumbers[i].value + '"><div class="title">' + TRANPHONES(clickedUser.phoneNumbers[i].type) + '</div><div class="content">' + clickedUser.phoneNumbers[i].value + '</div></div>';
+            }
+            document.getElementById('callContent').innerHTML = callContentHtml;
+            document.getElementsByClassName('callTitleImg')[0].setAttribute('src', 'img/mobilephone2.png');
+            document.getElementsByClassName('callTitleDesc')[0].innerHTML = '呼叫';
+            document.getElementsByClassName('shade')[0].style.display = 'block';
+        }
+    }
+
+    function calling(that) {
+        var sub = that.getAttribute('data-call')
+        YYPlugin.call("CommonPlugin", "call", {phone: sub});
+    }
+
+    //发送邮件
+    function clickEmail() {
+        var length = document.getElementsByClassName('emails').length;
+        if (length == 0) {
+            console.log('不能发邮件')
+        } else if (length == 1) {
+            YYPlugin.call("CommonPlugin", "email", {receive:clickedUser.emails[0].value});
+        } else {
+            var callContentHtml = '';
+            for (var i = 0; i < length; i++) {
+                if (i != 0) {
+                    callContentHtml = callContentHtml + '<hr class="a-li-call-hr"/>'
+                }
+                callContentHtml = callContentHtml + ' <div class="aCallLi" onclick="emailing(this)" data-email="' + clickedUser.emails[i].value + '"><div class="title">' + TRANEMAIL(clickedUser.emails[i].type) + '</div><div class="content">' + clickedUser.emails[i].value + '</div></div>';
+            }
+            document.getElementById('callContent').innerHTML = callContentHtml;
+            document.getElementsByClassName('callTitleImg')[0].setAttribute('src', 'img/email2.png');
+            document.getElementsByClassName('callTitleDesc')[0].innerHTML = '邮件';
+            document.getElementsByClassName('shade')[0].style.display = 'block';
+        }
+    }
+
+    function emailing(that) {
+        var sub = that.getAttribute('data-email')
+        YYPlugin.call("CommonPlugin", "email", {receive:sub});
+    }
+</script>
+</body>
+</html>
