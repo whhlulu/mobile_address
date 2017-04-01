@@ -1,3 +1,4 @@
+> 查看demo可以用测试人员（demo 数据属于copy出来的，主键重复导致数据不对应）
 ## 手机通讯录
 1. 数据格式cordova 插件cordova-plugin-contacts格式
 2. 含索引功能
